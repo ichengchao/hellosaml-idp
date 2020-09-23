@@ -15,7 +15,11 @@ public class CommonConstants {
 
     public static final String ROLE_SESSION_NAME = "test11@chengchao.name";
 //    public static final String ROLE_ARN = "acs:ram::1646992549003859:role/719SSOtest,acs:ram::1646992549003859:saml-provider/ARAAD";
-    public static final String ROLE_ARN = "acs:ram::1764263140474643:role/superadadmin,acs:ram::1764263140474643:saml-provider/superAD";
+
+//    public static final String ROLE_ARN = "acs:ram::1764263140474643:role/superadadmin,acs:ram::1764263140474643:saml-provider/superAD";
+
+    // 永法的账号
+    public static final String ROLE_ARN = "acs:ram::1039586246432389:role/superadadmin,acs:ram::1039586246432389:saml-provider/superAD";
 
     // 随便改
     public static final String IDP_ENTITY_ID = "https://sts.windows.net/fc8f6afa-b8a7-4acf-b16b-b65d76ce4260/";
