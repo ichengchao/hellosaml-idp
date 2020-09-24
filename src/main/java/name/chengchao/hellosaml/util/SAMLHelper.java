@@ -99,7 +99,10 @@ public class SAMLHelper {
         aliRole.setName("https://www.aliyun.com/SAML-Role/Attributes/Role");
         XSAny aliyunRole = new XSAnyBuilder().buildObject(AttributeValue.DEFAULT_ELEMENT_NAME);
         aliyunRole.setTextContent(CommonConstants.ROLE_ARN);
+        XSAny aliyunRole2 = new XSAnyBuilder().buildObject(AttributeValue.DEFAULT_ELEMENT_NAME);
+        aliyunRole2.setTextContent(CommonConstants.ROLE_ARN_2);
         aliRole.getAttributeValues().add(aliyunRole);
+        aliRole.getAttributeValues().add(aliyunRole2);
         attributeStatement.getAttributes().add(aliRole);
 
         Attribute roleSessionName = openSamlImplementation.buildSAMLObject(Attribute.class);
