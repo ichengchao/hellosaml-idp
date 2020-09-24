@@ -1,7 +1,5 @@
 package name.chengchao.hellosaml.common;
 
-import org.springframework.beans.factory.annotation.Value;
-
 /**
  * 常量
  * 
@@ -13,15 +11,15 @@ public class CommonConstants {
     public static final String ALIYUN_IDENTIFIER = "urn:alibaba:cloudcomputing";
     public static final String ALIYUN_REPLY_URL = "https://signin.aliyun.com/saml-role/sso";
 
+    
+    //用户名: 一般是员工的邮箱
     public static final String ROLE_SESSION_NAME = "test11@chengchao.name";
 //    public static final String ROLE_ARN = "acs:ram::1646992549003859:role/719SSOtest,acs:ram::1646992549003859:saml-provider/ARAAD";
 
-//    public static final String ROLE_ARN = "acs:ram::1764263140474643:role/superadadmin,acs:ram::1764263140474643:saml-provider/superAD";
+    //acs:ram::{uid}:role/{rolename},acs:ram::{uid}:saml-provider/{idp_provider_name}
+    public static final String ROLE_ARN = "acs:ram::1764263140474643:role/superadadmin,acs:ram::1764263140474643:saml-provider/superAD";
 
-    // 永法的账号
-    public static final String ROLE_ARN = "acs:ram::1039586246432389:role/superadadmin,acs:ram::1039586246432389:saml-provider/superAD";
-
-    // 随便改
+    // IDP_ENTITY_ID 就是oppo的唯一随机ID
     public static final String IDP_ENTITY_ID = "https://sts.windows.net/fc8f6afa-b8a7-4acf-b16b-b65d76ce4260/";
     public static final String Location = "https://login.microsoftonline.com/fc8f6afa-b8a7-4acf-b16b-b65d76ce4260/saml2";
 
