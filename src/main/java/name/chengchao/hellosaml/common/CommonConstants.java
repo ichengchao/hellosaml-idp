@@ -1,44 +1,37 @@
 package name.chengchao.hellosaml.common;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
- * 常量
- * 
- * @author charles
- * @date 2020-09-23
+ * 生成自签名证书的步骤<br>
+ * #create the keypair <br>
+ * openssl req -new -x509 -days 3652 -nodes -out saml.crt -keyout saml.pem <br>
+ * #convert the private key to pkcs8 format <br>
+ * openssl pkcs8 -topk8 -inform PEM -outform DER -in saml.pem -out saml.pkcs8
+ * -nocrypt <br>
  */
 public class CommonConstants {
+
+    public static final String PUBLIC_KEY_FILE_PATH = "/Users/charles/test/saml.crt";
+    public static final String PRIVATE_KEY_FILE_PATH = "/Users/charles/test/saml.pkcs8";
 
     public static final String ALIYUN_IDENTIFIER = "urn:alibaba:cloudcomputing";
     public static final String ALIYUN_REPLY_URL = "https://signin.aliyun.com/saml-role/sso";
 
-    
-    //用户名: 一般是员工的邮箱
-    public static final String ROLE_SESSION_NAME = "test11@chengchao.name";
-//    public static final String ROLE_ARN = "acs:ram::1646992549003859:role/719SSOtest,acs:ram::1646992549003859:saml-provider/ARAAD";
+    public static final String ATTRIBUTE_KEY_ROLE_SESSION_NAME = "https://www.aliyun.com/SAML-Role/Attributes/RoleSessionName";
+    public static final String ATTRIBUTE_KEY_ROLE = "https://www.aliyun.com/SAML-Role/Attributes/Role";
 
-    //acs:ram::{uid}:role/{rolename},acs:ram::{uid}:saml-provider/{idp_provider_name}
-    public static final String ROLE_ARN = "acs:ram::1764263140474643:role/superadadmin,acs:ram::1764263140474643:saml-provider/superAD";
-    public static final String ROLE_ARN_2 = "acs:ram::1764263140474643:role/super2,acs:ram::1764263140474643:saml-provider/superAD";
+    // 用户名: 一般是员工的邮箱
+    public static final String ROLE_SESSION_NAME = "admin@chengchao.name";
+
+    // acs:ram::{uid}:role/{rolename},acs:ram::{uid}:saml-provider/{idp_provider_name}
+    public static final List<String> ROLE_LIST = Arrays.asList(
+            "acs:ram::1764263140474643:role/superadadmin,acs:ram::1764263140474643:saml-provider/superAD",
+            "acs:ram::1764263140474643:role/super3,acs:ram::1764263140474643:saml-provider/superAD",
+            "acs:ram::1764263140474643:role/super2,acs:ram::1764263140474643:saml-provider/superAD");
 
     // IDP_ENTITY_ID 就是oppo的唯一随机ID
-    public static final String IDP_ENTITY_ID = "https://sts.windows.net/fc8f6afa-b8a7-4acf-b16b-b65d76ce4260/";
-    public static final String Location = "https://login.microsoftonline.com/fc8f6afa-b8a7-4acf-b16b-b65d76ce4260/saml2";
-
-    /**
-     * openssl 生成 私钥时所使用的密码
-     */
-    public static final String PASSWORD = "111111";
-    
-    
-//    # (中间会提示输入密码(重复输入两次)，要记住这个密码)
-//    openssl genrsa -des3 -out server.key 2048
-//    openssl req -new -x509 -key server.key -out server.crt -days 3650
-//    openssl pkcs12 -export -out server.pfx -inkey server.key -in server.crt
-//    openssl pkcs12 -in selfsigncert.pfx -nokeys -out test.pem
-    
-    
-    
-    
-    
+    public static final String IDP_ENTITY_ID = "https://chengchao.name/b65d76ce4260/";
 
 }
