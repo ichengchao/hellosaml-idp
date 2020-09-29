@@ -13,6 +13,9 @@ import java.util.List;
  */
 public class CommonConstants {
 
+    // 是否自动提交表单
+    public static final boolean SSO_FORM_AUTO_SUBMIT = false;
+
     public static final String PUBLIC_KEY_PATH = "saml.crt";
     public static final String PRIVATE_KEY_PATH = "saml.pkcs8";
 

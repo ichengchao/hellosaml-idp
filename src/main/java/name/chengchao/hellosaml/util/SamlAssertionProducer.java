@@ -58,7 +58,7 @@ import org.w3c.dom.Element;
 public class SamlAssertionProducer {
 
     public static Response createSAMLResponse(final String subjectId, final DateTime authenticationTime,
-            final HashMap<String, List<String>> attributes, String issuer, Integer samlAssertionDays) throws Throwable {
+            final HashMap<String, List<String>> attributes, String issuer, Integer samlAssertionDays) throws Exception {
         Signature signature = createSignature();
         Status status = createStatus();
         Issuer responseIssuer = null;
@@ -245,7 +245,7 @@ public class SamlAssertionProducer {
         return status;
     }
 
-    private static Signature createSignature() throws Throwable {
+    private static Signature createSignature() throws Exception {
         SignatureBuilder builder = new SignatureBuilder();
         Signature signature = builder.buildObject();
         signature.setSigningCredential(CertManager.getCredential());

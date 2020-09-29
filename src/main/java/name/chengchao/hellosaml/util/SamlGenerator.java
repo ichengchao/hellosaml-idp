@@ -35,16 +35,28 @@ import org.opensaml.xml.util.XMLHelper;
 import org.w3c.dom.Element;
 
 public class SamlGenerator {
+    static {
+        try {
+            // 初始化证书
+            CertManager.initSigningCredential();
+            DefaultBootstrap.bootstrap();
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
 
-    public static void main(String[] args) throws Throwable {
-        // 初始化证书
-        CertManager.initSigningCredential();
-        DefaultBootstrap.bootstrap();
+    public static void main(String[] args) throws Exception {
         generateResponse();
         generateMetaXML();
     }
 
-    public static void generateResponse() throws Throwable {
+    /**
+     * 生成base64的SAMLResponse
+     * 
+     * @return
+     * @throws Throwable
+     */
+    public static String generateResponse() throws Exception {
         HashMap<String, List<String>> attributes = new HashMap<String, List<String>>();
         attributes.put(CommonConstants.ATTRIBUTE_KEY_ROLE, CommonConstants.ROLE_LIST);
         List<String> sessionNameList = new ArrayList<String>();
@@ -59,13 +71,15 @@ public class SamlGenerator {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         XMLHelper.writeNode(element, baos);
         String responseStr = new String(baos.toByteArray());
+        String base64Encode = java.util.Base64.getEncoder().encodeToString(responseStr.getBytes());
 
         System.out.println("===============Response XML================");
         System.out.println(responseStr);
         System.out.println("===============Response XML================");
         System.out.println("===============Response Base64================");
-        System.out.println(java.util.Base64.getEncoder().encodeToString(responseStr.getBytes()));
+        System.out.println(base64Encode);
         System.out.println("===============Response Base64================");
+        return base64Encode;
     }
 
     public static void generateMetaXML() throws Exception {

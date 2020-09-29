@@ -5,6 +5,8 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import name.chengchao.hellosaml.common.CommonConstants;
+import name.chengchao.hellosaml.util.SamlGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -25,6 +27,20 @@ public class SampleController {
     @RequestMapping("/login")
     public void login(HttpServletRequest request, HttpServletResponse response) {
         try {
+
+            // 参考 templates/saml2-post-binding.vm
+            String onloadSubmit = "";
+            if (CommonConstants.SSO_FORM_AUTO_SUBMIT) {
+                onloadSubmit = "onload=\"document.forms[0].submit()\"";
+            }
+            String samlResponse = SamlGenerator.generateResponse();
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().write("<!DOCTYPE html><html><head><meta charset=\"utf-8\" /></head><body "
+                    + onloadSubmit
+                    + "><form action=\"https://signin.aliyun.com/saml-role/sso\" method=\"post\"><div><textarea name=\"SAMLResponse\">"
+                    + samlResponse
+                    + "</textarea></div><div><input type=\"submit\" value=\"Continue\" /></div></form></body></html>");
+            response.getWriter().flush();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
