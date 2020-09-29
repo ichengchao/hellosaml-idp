@@ -38,7 +38,7 @@ public class SamlGenerator {
 
     public static void main(String[] args) throws Throwable {
         // 初始化证书
-        CertManager.initSigningCredential(CommonConstants.PUBLIC_KEY_FILE_PATH, CommonConstants.PRIVATE_KEY_FILE_PATH);
+        CertManager.initSigningCredential();
         DefaultBootstrap.bootstrap();
         generateResponse();
         generateMetaXML();

@@ -13,8 +13,8 @@ import java.util.List;
  */
 public class CommonConstants {
 
-    public static final String PUBLIC_KEY_FILE_PATH = "/Users/charles/test/saml.crt";
-    public static final String PRIVATE_KEY_FILE_PATH = "/Users/charles/test/saml.pkcs8";
+    public static final String PUBLIC_KEY_PATH = "saml.crt";
+    public static final String PRIVATE_KEY_PATH = "saml.pkcs8";
 
     public static final String ALIYUN_IDENTIFIER = "urn:alibaba:cloudcomputing";
     public static final String ALIYUN_REPLY_URL = "https://signin.aliyun.com/saml-role/sso";

@@ -30,8 +30,13 @@ public class CertManager {
 
     public static X509Certificate credentialPublicKey;
 
-    public static void initSigningCredential(String publicKeyLocation, String privateKeyLocation) throws Throwable {
+    public static void initSigningCredential() throws Throwable {
         // create public key (cert) portion of credential
+        String publicKeyLocation = CertManager.class.getClassLoader().getResource(CommonConstants.PUBLIC_KEY_PATH)
+                .getFile();
+        String privateKeyLocation = CertManager.class.getClassLoader().getResource(CommonConstants.PRIVATE_KEY_PATH)
+                .getFile();
+
         InputStream inStream = new FileInputStream(publicKeyLocation);
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
         X509Certificate publicKey = (X509Certificate) cf.generateCertificate(inStream);
