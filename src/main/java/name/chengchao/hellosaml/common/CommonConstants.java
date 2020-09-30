@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CommonConstants {
-    // 是否自动提交表单,如果是的话
+    // 是否自动提交表单,默认为false,方便调试
     public static final boolean SSO_FORM_AUTO_SUBMIT = false;
 
     public static final String PUBLIC_KEY_PATH = "/Users/charles/test/saml.crt";
@@ -22,9 +22,11 @@ public class CommonConstants {
     // IDP_ENTITY_ID 唯一ID,代表IDP
     public static final String IDP_ENTITY_ID = "https://chengchao.name/b65d76ce4260/";
 
+    /**
+     * 以下内容不需要修改
+     */
     public static final String ALIYUN_IDENTIFIER = "urn:alibaba:cloudcomputing";
     public static final String ALIYUN_REPLY_URL = "https://signin.aliyun.com/saml-role/sso";
-
     public static final String ATTRIBUTE_KEY_ROLE_SESSION_NAME = "https://www.aliyun.com/SAML-Role/Attributes/RoleSessionName";
     public static final String ATTRIBUTE_KEY_ROLE = "https://www.aliyun.com/SAML-Role/Attributes/Role";
 
