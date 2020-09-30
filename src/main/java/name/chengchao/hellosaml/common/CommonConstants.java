@@ -11,12 +11,11 @@ public class CommonConstants {
     public static final String PRIVATE_KEY_PATH = "/Users/charles/test/saml.pkcs8";
 
     // 用户名: 一般是员工的邮箱
-    public static final String ROLE_SESSION_NAME = "admin@chengchao.name";
+    public static final String ROLE_SESSION_NAME = "admin@example.name";
 
     // role的list,格式如下注释
     // acs:ram::{uid}:role/{rolename},acs:ram::{uid}:saml-provider/{idp_provider_name}
     public static final List<String> ROLE_LIST = Arrays.asList(
-            "acs:ram::1764263140474643:role/superadadmin,acs:ram::1764263140474643:saml-provider/superAD",
             "acs:ram::1764263140474643:role/super3,acs:ram::1764263140474643:saml-provider/superAD",
             "acs:ram::1764263140474643:role/super2,acs:ram::1764263140474643:saml-provider/superAD");
 
