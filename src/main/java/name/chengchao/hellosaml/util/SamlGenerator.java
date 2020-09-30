@@ -82,7 +82,7 @@ public class SamlGenerator {
         return base64Encode;
     }
 
-    public static void generateMetaXML() throws Exception {
+    public static String generateMetaXML() throws Exception {
 
         EntityDescriptorBuilder entityDescriptorBuilder = new EntityDescriptorBuilder();
         EntityDescriptor entityDescriptor = entityDescriptorBuilder.buildObject();
@@ -135,6 +135,8 @@ public class SamlGenerator {
         System.out.println("===============MetaXML================");
         System.out.println(metaXMLStr);
         System.out.println("===============MetaXML================");
+
+        return metaXMLStr;
 
     }
 

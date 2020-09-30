@@ -24,6 +24,12 @@ public class SampleController {
         return "Hello World! @" + new Date();
     }
 
+    /**
+     * 测试sso
+     * 
+     * @param request
+     * @param response
+     */
     @RequestMapping("/login")
     public void login(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -40,6 +46,25 @@ public class SampleController {
                     + "><form action=\"https://signin.aliyun.com/saml-role/sso\" method=\"post\"><div><textarea name=\"SAMLResponse\">"
                     + samlResponse
                     + "</textarea></div><div><input type=\"submit\" value=\"Continue\" /></div></form></body></html>");
+            response.getWriter().flush();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+
+    }
+
+    /**
+     * 下载meta.xml
+     * 
+     * @param request
+     * @param response
+     */
+    @RequestMapping("/metaxml")
+    public void metaxml(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String metaxml = SamlGenerator.generateMetaXML();
+            response.setContentType("application/xml;charset=UTF-8");
+            response.getWriter().write(metaxml);
             response.getWriter().flush();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

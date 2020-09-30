@@ -20,30 +20,23 @@ import org.opensaml.xml.security.x509.BasicX509Credential;
  */
 public class CertManager {
 
-//    #create the keypair
-//    openssl req -new -x509 -days 3652 -nodes -out saml.crt -keyout saml.pem
-//
-//    #convert the private key to pkcs8 format
-//    openssl pkcs8 -topk8 -inform PEM -outform DER -in saml.pem -out saml.pkcs8 -nocrypt
-
     public static Credential credential;
 
     public static X509Certificate credentialPublicKey;
 
     public static void initSigningCredential() throws Throwable {
-        // create public key (cert) portion of credential
-        String publicKeyLocation = CertManager.class.getClassLoader().getResource(CommonConstants.PUBLIC_KEY_PATH)
-                .getFile();
-        String privateKeyLocation = CertManager.class.getClassLoader().getResource(CommonConstants.PRIVATE_KEY_PATH)
-                .getFile();
+//        String publicKeyLocation = CertManager.class.getClassLoader().getResource(CommonConstants.PUBLIC_KEY_PATH)
+//                .getFile();
+//        String privateKeyLocation = CertManager.class.getClassLoader().getResource(CommonConstants.PRIVATE_KEY_PATH)
+//                .getFile();
 
-        InputStream inStream = new FileInputStream(publicKeyLocation);
+        InputStream inStream = new FileInputStream(CommonConstants.PUBLIC_KEY_PATH);
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
         X509Certificate publicKey = (X509Certificate) cf.generateCertificate(inStream);
         inStream.close();
 
         // create private key
-        RandomAccessFile raf = new RandomAccessFile(privateKeyLocation, "r");
+        RandomAccessFile raf = new RandomAccessFile(CommonConstants.PRIVATE_KEY_PATH, "r");
         byte[] buf = new byte[(int) raf.length()];
         raf.readFully(buf);
         raf.close();
