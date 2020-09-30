@@ -82,7 +82,7 @@ public class SamlAssertionProducer {
         AuthnStatement authnStatement = createAuthnStatement(authenticationTime);
 
         Assertion assertion = createAssertion(new DateTime(), subject, assertionIssuer, authnStatement,
-                attributeStatement);
+                attributeStatement, samlAssertionDays);
 
         Response response = createResponse(new DateTime(), responseIssuer, status, assertion);
         response.setSignature(signature);
@@ -129,7 +129,7 @@ public class SamlAssertionProducer {
     }
 
     private static Assertion createAssertion(final DateTime issueDate, Subject subject, Issuer issuer,
-            AuthnStatement authnStatement, AttributeStatement attributeStatement) {
+            AuthnStatement authnStatement, AttributeStatement attributeStatement, final Integer samlAssertionDays) {
         AssertionBuilder assertionBuilder = new AssertionBuilder();
         Assertion assertion = assertionBuilder.buildObject();
         assertion.setID(UUID.randomUUID().toString());
@@ -138,7 +138,9 @@ public class SamlAssertionProducer {
         assertion.setIssuer(issuer);
 
         DateTime currentDate = new DateTime();
-        currentDate.plusDays(1);
+        if (samlAssertionDays != null) {
+            currentDate = currentDate.plusDays(samlAssertionDays);
+        }
         Conditions conditions = createConditions(currentDate, CommonConstants.ALIYUN_IDENTIFIER);
         assertion.setConditions(conditions);
 
@@ -161,8 +163,9 @@ public class SamlAssertionProducer {
 
     private static Subject createSubject(final String subjectId, final Integer samlAssertionDays) {
         DateTime currentDate = new DateTime();
-        if (samlAssertionDays != null)
+        if (samlAssertionDays != null) {
             currentDate = currentDate.plusDays(samlAssertionDays);
+        }
 
         // create name element
         NameIDBuilder nameIdBuilder = new NameIDBuilder();
