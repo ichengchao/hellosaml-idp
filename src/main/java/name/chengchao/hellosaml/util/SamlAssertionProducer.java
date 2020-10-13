@@ -1,6 +1,5 @@
 package name.chengchao.hellosaml.util;
 
-import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,8 +51,6 @@ import org.opensaml.xml.signature.Signature;
 import org.opensaml.xml.signature.SignatureConstants;
 import org.opensaml.xml.signature.Signer;
 import org.opensaml.xml.signature.impl.SignatureBuilder;
-import org.opensaml.xml.util.XMLHelper;
-import org.w3c.dom.Element;
 
 public class SamlAssertionProducer {
 
@@ -88,14 +85,11 @@ public class SamlAssertionProducer {
         response.setSignature(signature);
 
         ResponseMarshaller marshaller = new ResponseMarshaller();
-        Element element = marshaller.marshall(response);
+        marshaller.marshall(response);
 
         if (signature != null) {
             Signer.signObject(signature);
         }
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        XMLHelper.writeNode(element, baos);
         return response;
     }
 
