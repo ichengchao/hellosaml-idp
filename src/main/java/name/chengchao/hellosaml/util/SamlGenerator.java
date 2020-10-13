@@ -1,37 +1,43 @@
 package name.chengchao.hellosaml.util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import name.chengchao.hellosaml.common.CertManager;
 import name.chengchao.hellosaml.common.CommonConstants;
+import net.shibboleth.utilities.java.support.xml.SerializeSupport;
 import org.joda.time.DateTime;
-import org.opensaml.DefaultBootstrap;
-import org.opensaml.common.xml.SAMLConstants;
-import org.opensaml.saml2.core.NameIDType;
-import org.opensaml.saml2.core.Response;
-import org.opensaml.saml2.core.impl.ResponseMarshaller;
-import org.opensaml.saml2.metadata.EntityDescriptor;
-import org.opensaml.saml2.metadata.IDPSSODescriptor;
-import org.opensaml.saml2.metadata.KeyDescriptor;
-import org.opensaml.saml2.metadata.NameIDFormat;
-import org.opensaml.saml2.metadata.SingleSignOnService;
-import org.opensaml.saml2.metadata.impl.EntityDescriptorBuilder;
-import org.opensaml.saml2.metadata.impl.EntityDescriptorMarshaller;
-import org.opensaml.saml2.metadata.impl.IDPSSODescriptorBuilder;
-import org.opensaml.saml2.metadata.impl.KeyDescriptorBuilder;
-import org.opensaml.saml2.metadata.impl.NameIDFormatBuilder;
-import org.opensaml.saml2.metadata.impl.SingleSignOnServiceBuilder;
-import org.opensaml.xml.security.credential.UsageType;
-import org.opensaml.xml.signature.KeyInfo;
-import org.opensaml.xml.signature.X509Certificate;
-import org.opensaml.xml.signature.X509Data;
-import org.opensaml.xml.signature.impl.KeyInfoBuilder;
-import org.opensaml.xml.signature.impl.X509CertificateBuilder;
-import org.opensaml.xml.signature.impl.X509DataBuilder;
-import org.opensaml.xml.util.XMLHelper;
+import org.opensaml.core.config.InitializationService;
+import org.opensaml.saml.common.xml.SAMLConstants;
+import org.opensaml.saml.saml2.core.NameIDType;
+import org.opensaml.saml.saml2.core.Response;
+import org.opensaml.saml.saml2.core.impl.ResponseMarshaller;
+import org.opensaml.saml.saml2.metadata.EntityDescriptor;
+import org.opensaml.saml.saml2.metadata.IDPSSODescriptor;
+import org.opensaml.saml.saml2.metadata.KeyDescriptor;
+import org.opensaml.saml.saml2.metadata.NameIDFormat;
+import org.opensaml.saml.saml2.metadata.SingleSignOnService;
+import org.opensaml.saml.saml2.metadata.impl.EntityDescriptorBuilder;
+import org.opensaml.saml.saml2.metadata.impl.EntityDescriptorMarshaller;
+import org.opensaml.saml.saml2.metadata.impl.IDPSSODescriptorBuilder;
+import org.opensaml.saml.saml2.metadata.impl.KeyDescriptorBuilder;
+import org.opensaml.saml.saml2.metadata.impl.NameIDFormatBuilder;
+import org.opensaml.saml.saml2.metadata.impl.SingleSignOnServiceBuilder;
+import org.opensaml.security.credential.UsageType;
+import org.opensaml.xmlsec.signature.KeyInfo;
+import org.opensaml.xmlsec.signature.X509Certificate;
+import org.opensaml.xmlsec.signature.X509Data;
+import org.opensaml.xmlsec.signature.impl.KeyInfoBuilder;
+import org.opensaml.xmlsec.signature.impl.X509CertificateBuilder;
+import org.opensaml.xmlsec.signature.impl.X509DataBuilder;
 import org.w3c.dom.Element;
 
 public class SamlGenerator {
@@ -39,7 +45,8 @@ public class SamlGenerator {
         try {
             // 初始化证书
             CertManager.initSigningCredential();
-            DefaultBootstrap.bootstrap();
+            InitializationService.initialize();
+//            DefaultBootstrap.bootstrap();
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -47,7 +54,9 @@ public class SamlGenerator {
 
     public static void main(String[] args) throws Exception {
         generateResponse();
-        generateMetaXML();
+//        generateMetaXML();
+        
+        
     }
 
     /**
@@ -68,10 +77,23 @@ public class SamlGenerator {
         // output Response
         ResponseMarshaller marshaller = new ResponseMarshaller();
         Element element = marshaller.marshall(responseInitial);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        XMLHelper.writeNode(element, baos);
-        String responseStr = new String(baos.toByteArray());
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        String responseStr = SerializeSupport.prettyPrintXML(element);
+//        XMLHelper.writeNode(element, baos);
+//        String responseStr = new String(baos.toByteArray());
+        responseStr = responseStr.replace("&#xd;","");
         String base64Encode = java.util.Base64.getEncoder().encodeToString(responseStr.getBytes());
+        
+        
+        TransformerFactory transformerFactory = TransformerFactory
+                .newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        DOMSource source = new DOMSource(element);
+        StreamResult result = new StreamResult(new StringWriter());
+        transformer.transform(source, result);
+        String strObject = result.getWriter().toString();
+        System.out.println("===="+strObject);
+        
 
         System.out.println("===============Response XML================");
         System.out.println(responseStr);
@@ -128,9 +150,11 @@ public class SamlGenerator {
         // output EntityDescriptor
         EntityDescriptorMarshaller marshaller = new EntityDescriptorMarshaller();
         Element element = marshaller.marshall(entityDescriptor);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        XMLHelper.writeNode(element, baos);
-        String metaXMLStr = new String(baos.toByteArray());
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        XMLHelper.writeNode(element, baos);
+//        String metaXMLStr = new String(baos.toByteArray());
+        
+        String metaXMLStr = SerializeSupport.prettyPrintXML(element);
 
         System.out.println("===============MetaXML================");
         System.out.println(metaXMLStr);

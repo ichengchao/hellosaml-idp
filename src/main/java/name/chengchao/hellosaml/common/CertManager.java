@@ -9,8 +9,8 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.spec.PKCS8EncodedKeySpec;
 
-import org.opensaml.xml.security.credential.Credential;
-import org.opensaml.xml.security.x509.BasicX509Credential;
+import org.opensaml.security.credential.Credential;
+import org.opensaml.security.x509.BasicX509Credential;
 
 /**
  * CertManager
@@ -46,9 +46,9 @@ public class CertManager {
         PrivateKey privateKey = kf.generatePrivate(kspec);
 
         // create credential and initialize
-        BasicX509Credential basicX509Credential = new BasicX509Credential();
-        basicX509Credential.setEntityCertificate(publicKey);
-        basicX509Credential.setPrivateKey(privateKey);
+        BasicX509Credential basicX509Credential = new BasicX509Credential(publicKey, privateKey);
+//        basicX509Credential.setEntityCertificate(publicKey);
+//        basicX509Credential.setPrivateKey(privateKey);
 
         credential = basicX509Credential;
         // TODO

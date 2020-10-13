@@ -42,10 +42,17 @@
 			<version>2.1</version>
 		</dependency>
 
+<!--  
 		<dependency>
 			<groupId>org.opensaml</groupId>
 			<artifactId>opensaml</artifactId>
 			<version>2.5.3</version>
+		</dependency>
+		-->
+		<dependency>
+			<groupId>org.opensaml</groupId>
+			<artifactId>opensaml-saml-impl</artifactId>
+			<version>3.4.5</version>
 		</dependency>
 
 
