@@ -9,7 +9,6 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.spec.PKCS8EncodedKeySpec;
 
-import org.opensaml.xml.security.credential.Credential;
 import org.opensaml.xml.security.x509.BasicX509Credential;
 
 /**
@@ -20,9 +19,7 @@ import org.opensaml.xml.security.x509.BasicX509Credential;
  */
 public class CertManager {
 
-    public static Credential credential;
-
-    public static X509Certificate credentialPublicKey;
+    public static BasicX509Credential credential;
 
     public static void initSigningCredential() throws Throwable {
 //        String publicKeyLocation = CertManager.class.getClassLoader().getResource(CommonConstants.PUBLIC_KEY_PATH)
@@ -51,16 +48,10 @@ public class CertManager {
         basicX509Credential.setPrivateKey(privateKey);
 
         credential = basicX509Credential;
-        // TODO
-        credentialPublicKey = publicKey;
-
     }
 
-    public static Credential getCredential() {
+    public static BasicX509Credential getCredential() {
         return credential;
     }
 
-    public static X509Certificate getCredentialPublicKey() {
-        return credentialPublicKey;
-    }
 }

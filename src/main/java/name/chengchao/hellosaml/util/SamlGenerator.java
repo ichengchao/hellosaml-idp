@@ -100,8 +100,8 @@ public class SamlGenerator {
         X509CertificateBuilder x509CertificateBuilder = new X509CertificateBuilder();
         X509Certificate x509Certificate = x509CertificateBuilder.buildObject();
 
-        x509Certificate.setValue(
-                new String(java.util.Base64.getEncoder().encode(CertManager.getCredentialPublicKey().getEncoded())));
+        x509Certificate.setValue(new String(
+                java.util.Base64.getEncoder().encode(CertManager.getCredential().getEntityCertificate().getEncoded())));
 
         X509DataBuilder x509DataBuilder = new X509DataBuilder();
         X509Data x509Data = x509DataBuilder.buildObject();
