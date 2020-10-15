@@ -1,13 +1,9 @@
 package name.chengchao.hellosaml.util;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import name.chengchao.hellosaml.common.CertManager;
 import name.chengchao.hellosaml.common.CommonConstants;
-import org.joda.time.DateTime;
 import org.opensaml.DefaultBootstrap;
 import org.opensaml.common.xml.SAMLConstants;
 import org.opensaml.saml2.core.NameIDType;
@@ -57,13 +53,8 @@ public class SamlGenerator {
      * @throws Throwable
      */
     public static String generateResponse() throws Exception {
-        HashMap<String, List<String>> attributes = new HashMap<String, List<String>>();
-        attributes.put(CommonConstants.ATTRIBUTE_KEY_ROLE, CommonConstants.ROLE_LIST);
-        List<String> sessionNameList = new ArrayList<String>();
-        sessionNameList.add(CommonConstants.ROLE_SESSION_NAME);
-        attributes.put(CommonConstants.ATTRIBUTE_KEY_ROLE_SESSION_NAME, sessionNameList);
-        Response responseInitial = SamlAssertionProducer.createSAMLResponse("subject", new DateTime(), attributes,
-                CommonConstants.IDP_ENTITY_ID, 5);
+        Response responseInitial = SamlAssertionProducer.createSAMLResponse(CommonConstants.ROLE_SESSION_NAME,
+                CommonConstants.ROLE_LIST);
 
         // output Response
         ResponseMarshaller marshaller = new ResponseMarshaller();

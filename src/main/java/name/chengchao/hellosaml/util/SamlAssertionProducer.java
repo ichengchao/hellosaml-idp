@@ -1,5 +1,6 @@
 package name.chengchao.hellosaml.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,8 +55,20 @@ import org.opensaml.xml.signature.impl.SignatureBuilder;
 
 public class SamlAssertionProducer {
 
-    public static Response createSAMLResponse(final String subjectId, final DateTime authenticationTime,
-            final HashMap<String, List<String>> attributes, String issuer, Integer samlAssertionDays) throws Exception {
+    public static Response createSAMLResponse(String roleSessionName, List<String> roleList) throws Exception {
+
+        HashMap<String, List<String>> attributes = new HashMap<String, List<String>>();
+        attributes.put(CommonConstants.ATTRIBUTE_KEY_ROLE, roleList);
+        List<String> sessionNameList = new ArrayList<String>();
+        sessionNameList.add(roleSessionName);
+        attributes.put(CommonConstants.ATTRIBUTE_KEY_ROLE_SESSION_NAME, sessionNameList);
+
+        // ****************默认参数***************
+        String subjectId = "subject";
+        DateTime authenticationTime = new DateTime();
+        String issuer = CommonConstants.IDP_ENTITY_ID;
+        Integer samlAssertionDays = 5;
+        // ****************默认参数***************
         Signature signature = createSignature();
         Status status = createStatus();
         Issuer responseIssuer = null;
