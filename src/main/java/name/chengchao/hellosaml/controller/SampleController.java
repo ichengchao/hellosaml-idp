@@ -42,9 +42,8 @@ public class SampleController {
             String samlResponse = SamlGenerator.generateResponse();
             response.setContentType("text/html;charset=UTF-8");
             response.getWriter().write("<!DOCTYPE html><html><head><meta charset=\"utf-8\" /></head><body "
-                    + onloadSubmit
-                    + "><form action=\"https://signin.aliyun.com/saml-role/sso\" method=\"post\"><div><textarea name=\"SAMLResponse\">"
-                    + samlResponse
+                    + onloadSubmit + "><form action=\"" + CommonConstants.ALIYUN_REPLY_URL
+                    + "\" method=\"post\"><div><textarea name=\"SAMLResponse\">" + samlResponse
                     + "</textarea></div><div><input type=\"submit\" value=\"Continue\" /></div></form></body></html>");
             response.getWriter().flush();
         } catch (Exception e) {

@@ -82,7 +82,10 @@ public class SamlAssertionProducer {
                 attributeStatement, samlAssertionDays);
 
         Response response = createResponse(new DateTime(), responseIssuer, status, assertion);
-        response.setSignature(signature);
+        //response.setSignature(signature);
+        
+        
+        response.getAssertions().get(0).setSignature(signature);
 
         ResponseMarshaller marshaller = new ResponseMarshaller();
         marshaller.marshall(response);
