@@ -82,9 +82,9 @@ public class SamlAssertionProducer {
                 attributeStatement, samlAssertionDays);
 
         Response response = createResponse(new DateTime(), responseIssuer, status, assertion);
-        //response.setSignature(signature);
-        
-        
+
+        // aliyun 两种都可以,aws需要把signature放在assertion里
+        // response.setSignature(signature);
         response.getAssertions().get(0).setSignature(signature);
 
         ResponseMarshaller marshaller = new ResponseMarshaller();
