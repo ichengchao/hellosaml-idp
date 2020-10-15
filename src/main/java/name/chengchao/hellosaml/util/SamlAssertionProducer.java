@@ -109,7 +109,7 @@ public class SamlAssertionProducer {
         return response;
     }
 
-    public static Conditions createConditions(final DateTime notOnOrAfter, final String audienceUri) {
+    private static Conditions createConditions(final DateTime notOnOrAfter, final String audienceUri) {
         ConditionsBuilder conditionsBuilder = new ConditionsBuilder();
         final Conditions conditions = conditionsBuilder.buildObject();
         conditions.setNotOnOrAfter(notOnOrAfter);
