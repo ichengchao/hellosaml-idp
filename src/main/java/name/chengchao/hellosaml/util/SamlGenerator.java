@@ -6,19 +6,16 @@ import name.chengchao.hellosaml.common.CertManager;
 import name.chengchao.hellosaml.common.CommonConstants;
 import org.opensaml.DefaultBootstrap;
 import org.opensaml.common.xml.SAMLConstants;
-import org.opensaml.saml2.core.NameIDType;
 import org.opensaml.saml2.core.Response;
 import org.opensaml.saml2.core.impl.ResponseMarshaller;
 import org.opensaml.saml2.metadata.EntityDescriptor;
 import org.opensaml.saml2.metadata.IDPSSODescriptor;
 import org.opensaml.saml2.metadata.KeyDescriptor;
-import org.opensaml.saml2.metadata.NameIDFormat;
 import org.opensaml.saml2.metadata.SingleSignOnService;
 import org.opensaml.saml2.metadata.impl.EntityDescriptorBuilder;
 import org.opensaml.saml2.metadata.impl.EntityDescriptorMarshaller;
 import org.opensaml.saml2.metadata.impl.IDPSSODescriptorBuilder;
 import org.opensaml.saml2.metadata.impl.KeyDescriptorBuilder;
-import org.opensaml.saml2.metadata.impl.NameIDFormatBuilder;
 import org.opensaml.saml2.metadata.impl.SingleSignOnServiceBuilder;
 import org.opensaml.xml.security.credential.UsageType;
 import org.opensaml.xml.signature.KeyInfo;
@@ -53,8 +50,7 @@ public class SamlGenerator {
      * @throws Throwable
      */
     public static String generateResponse() throws Exception {
-        Response responseInitial = SamlAssertionProducer.createSAMLResponse(CommonConstants.ROLE_SESSION_NAME,
-                CommonConstants.ROLE_LIST);
+        Response responseInitial = SamlAssertionProducer.createSAMLResponse(null, null);
 
         // output Response
         ResponseMarshaller marshaller = new ResponseMarshaller();
@@ -105,10 +101,11 @@ public class SamlGenerator {
         keyDescriptor.setKeyInfo(keyInfo);
         idpssoDescriptor.getKeyDescriptors().add(keyDescriptor);
 
-        NameIDFormatBuilder nameIDFormatBuilder = new NameIDFormatBuilder();
-        NameIDFormat nameIDFormat = nameIDFormatBuilder.buildObject();
-        nameIDFormat.setFormat(NameIDType.UNSPECIFIED);
-        idpssoDescriptor.getNameIDFormats().add(nameIDFormat);
+        // 这个不是必要的,所以去除
+//        NameIDFormatBuilder nameIDFormatBuilder = new NameIDFormatBuilder();
+//        NameIDFormat nameIDFormat = nameIDFormatBuilder.buildObject();
+//        nameIDFormat.setFormat(NameIDType.UNSPECIFIED);
+//        idpssoDescriptor.getNameIDFormats().add(nameIDFormat);
 
         SingleSignOnServiceBuilder singleSignOnServiceBuilder = new SingleSignOnServiceBuilder();
         SingleSignOnService singleSignOnService = singleSignOnServiceBuilder.buildObject();
