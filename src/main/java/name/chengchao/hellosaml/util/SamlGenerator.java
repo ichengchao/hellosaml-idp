@@ -51,6 +51,8 @@ public class SamlGenerator {
      */
     public static String generateResponse() throws Exception {
         Response responseInitial = SamlAssertionProducer.createSAMLResponse(null, null);
+//        Response responseInitial = SamlAssertionProducer.createSAMLResponse(CommonConstants.ROLE_SESSION_NAME,
+//                CommonConstants.ROLE_LIST);
 
         // output Response
         ResponseMarshaller marshaller = new ResponseMarshaller();

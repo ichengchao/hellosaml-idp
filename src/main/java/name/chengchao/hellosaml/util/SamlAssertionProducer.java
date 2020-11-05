@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import name.chengchao.hellosaml.common.CertManager;
 import name.chengchao.hellosaml.common.CommonConstants;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.opensaml.common.SAMLVersion;
 import org.opensaml.saml2.core.Assertion;
@@ -22,6 +23,7 @@ import org.opensaml.saml2.core.AuthnStatement;
 import org.opensaml.saml2.core.Conditions;
 import org.opensaml.saml2.core.Issuer;
 import org.opensaml.saml2.core.NameID;
+import org.opensaml.saml2.core.NameIDType;
 import org.opensaml.saml2.core.Response;
 import org.opensaml.saml2.core.Status;
 import org.opensaml.saml2.core.StatusCode;
@@ -58,13 +60,17 @@ public class SamlAssertionProducer {
     public static Response createSAMLResponse(String roleSessionName, List<String> roleList) throws Exception {
 
         HashMap<String, List<String>> attributes = new HashMap<String, List<String>>();
-        attributes.put(CommonConstants.ATTRIBUTE_KEY_ROLE, roleList);
-        List<String> sessionNameList = new ArrayList<String>();
-        sessionNameList.add(roleSessionName);
-        attributes.put(CommonConstants.ATTRIBUTE_KEY_ROLE_SESSION_NAME, sessionNameList);
+        if (null != roleList && !roleList.isEmpty()) {
+            attributes.put(CommonConstants.ATTRIBUTE_KEY_ROLE, roleList);
+        }
+        if (StringUtils.isNotBlank(roleSessionName)) {
+            List<String> sessionNameList = new ArrayList<String>();
+            sessionNameList.add(roleSessionName);
+            attributes.put(CommonConstants.ATTRIBUTE_KEY_ROLE_SESSION_NAME, sessionNameList);
+        }
 
         // ****************默认参数***************
-        String subjectId = "subject";
+        String subjectId = "wang@chengchao.name";
         DateTime authenticationTime = new DateTime();
         String issuer = CommonConstants.IDP_ENTITY_ID;
         Integer samlAssertionDays = 5;
@@ -181,7 +187,8 @@ public class SamlAssertionProducer {
         NameIDBuilder nameIdBuilder = new NameIDBuilder();
         NameID nameId = nameIdBuilder.buildObject();
         nameId.setValue(subjectId);
-        nameId.setFormat("urn:oasis:names:tc:SAML:2.0:nameid-format:persistent");
+        nameId.setFormat(NameIDType.EMAIL);
+//        nameId.setFormat(NameIDType.PERSISTENT);
 
         SubjectConfirmationDataBuilder dataBuilder = new SubjectConfirmationDataBuilder();
         SubjectConfirmationData subjectConfirmationData = dataBuilder.buildObject();
