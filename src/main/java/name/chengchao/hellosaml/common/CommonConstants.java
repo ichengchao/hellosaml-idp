@@ -27,8 +27,8 @@ public class CommonConstants {
     /**
      * 以下内容不需要修改
      */
-    public static final String ALIYUN_IDENTIFIER = "https://signin.aliyun.com/1764263140474643/saml/SSO";
-    public static final String ALIYUN_REPLY_URL = "https://signin.aliyun.com/saml/SSO";
+    public static final String ALIYUN_IDENTIFIER = "https://us-east-2.signin.aws.amazon.com/platform/saml/d-9a672420ed";
+    public static final String ALIYUN_REPLY_URL = "https://us-east-2.signin.aws.amazon.com/platform/saml/acs/6b9f0caa-6290-41d0-b4de-bd190139324e";
 //    public static final String ALIYUN_IDENTIFIER = "urn:alibaba:cloudcomputing";
 //    public static final String ALIYUN_REPLY_URL = "https://signin.aliyun.com/saml-role/sso";
     public static final String ATTRIBUTE_KEY_ROLE_SESSION_NAME = "https://www.aliyun.com/SAML-Role/Attributes/RoleSessionName";
