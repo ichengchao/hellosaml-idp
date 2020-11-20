@@ -1,6 +1,5 @@
 package name.chengchao.hellosaml.util;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +7,6 @@ import java.util.UUID;
 
 import name.chengchao.hellosaml.common.CertManager;
 import name.chengchao.hellosaml.common.CommonConstants;
-import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.opensaml.common.SAMLVersion;
 import org.opensaml.saml2.core.Assertion;
@@ -54,27 +52,35 @@ import org.opensaml.xml.signature.Signature;
 import org.opensaml.xml.signature.SignatureConstants;
 import org.opensaml.xml.signature.Signer;
 import org.opensaml.xml.signature.impl.SignatureBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 
 public class SamlAssertionProducer {
 
-    public static Response createSAMLResponse(String roleSessionName, List<String> roleList) throws Exception {
+    private static Logger logger = LoggerFactory.getLogger(SamlAssertionProducer.class);
 
-        HashMap<String, List<String>> attributes = new HashMap<String, List<String>>();
-        if (null != roleList && !roleList.isEmpty()) {
-            attributes.put(CommonConstants.ATTRIBUTE_KEY_ROLE, roleList);
-        }
-        if (StringUtils.isNotBlank(roleSessionName)) {
-            List<String> sessionNameList = new ArrayList<String>();
-            sessionNameList.add(roleSessionName);
-            attributes.put(CommonConstants.ATTRIBUTE_KEY_ROLE_SESSION_NAME, sessionNameList);
-        }
+    public static Response createSAMLResponse(String identifier, String replyUrl, String nameID,
+            HashMap<String, List<String>> attributes) throws Exception {
+
+        Assert.hasText(identifier, "identifier can not be blank!");
+        Assert.hasText(replyUrl, "replyUrl can not be blank!");
+        Assert.hasText(nameID, "nameID can not be blank!");
+        // Assert.notEmpty(attributes, "attributes can not be empty!");
+
+        logger.info("**********************************SAML INFO**********************************");
+        logger.info("identifier: " + identifier);
+        logger.info("replyUrl: " + replyUrl);
+        logger.info("nameID: " + nameID);
+        logger.info("attributes: " + attributes);
+        logger.info("*****************************************************************************");
 
         // ****************默认参数***************
-        String subjectId = "wang@chengchao.name";
         DateTime authenticationTime = new DateTime();
         String issuer = CommonConstants.IDP_ENTITY_ID;
-        Integer samlAssertionDays = 5;
+        Integer samlAssertionDays = 2;
         // ****************默认参数***************
+
         Signature signature = createSignature();
         Status status = createStatus();
         Issuer responseIssuer = null;
@@ -87,21 +93,20 @@ public class SamlAssertionProducer {
             assertionIssuer = createIssuer(issuer);
         }
 
-        if (subjectId != null) {
-            subject = createSubject(subjectId, samlAssertionDays);
+        if (attributes != null) {
+            attributeStatement = createAttributeStatement(attributes);
         }
 
-        if (attributes != null && attributes.size() != 0) {
-            attributeStatement = createAttributeStatement(attributes);
+        if (nameID != null) {
+            subject = createSubject(replyUrl, nameID, samlAssertionDays);
         }
 
         AuthnStatement authnStatement = createAuthnStatement(authenticationTime);
 
-        Assertion assertion = createAssertion(new DateTime(), subject, assertionIssuer, authnStatement,
-                attributeStatement, samlAssertionDays);
+        Assertion assertion = createAssertion(authenticationTime, subject, assertionIssuer, authnStatement,
+                attributeStatement, samlAssertionDays, identifier);
 
-        Response response = createResponse(new DateTime(), responseIssuer, status, assertion);
-
+        Response response = createResponse(authenticationTime, responseIssuer, status, assertion);
         // aliyun 两种都可以,aws需要把signature放在assertion里
         // response.setSignature(signature);
         response.getAssertions().get(0).setSignature(signature);
@@ -145,7 +150,8 @@ public class SamlAssertionProducer {
     }
 
     private static Assertion createAssertion(final DateTime issueDate, Subject subject, Issuer issuer,
-            AuthnStatement authnStatement, AttributeStatement attributeStatement, final Integer samlAssertionDays) {
+            AuthnStatement authnStatement, AttributeStatement attributeStatement, final Integer samlAssertionDays,
+            final String identifier) {
         AssertionBuilder assertionBuilder = new AssertionBuilder();
         Assertion assertion = assertionBuilder.buildObject();
         assertion.setID(UUID.randomUUID().toString());
@@ -157,14 +163,16 @@ public class SamlAssertionProducer {
         if (samlAssertionDays != null) {
             currentDate = currentDate.plusDays(samlAssertionDays);
         }
-        Conditions conditions = createConditions(currentDate, CommonConstants.ALIYUN_IDENTIFIER);
+        Conditions conditions = createConditions(currentDate, identifier);
         assertion.setConditions(conditions);
 
-        if (authnStatement != null)
+        if (authnStatement != null) {
             assertion.getAuthnStatements().add(authnStatement);
+        }
 
-        if (attributeStatement != null)
+        if (attributeStatement != null) {
             assertion.getAttributeStatements().add(attributeStatement);
+        }
 
         return assertion;
     }
@@ -177,7 +185,7 @@ public class SamlAssertionProducer {
         return issuer;
     }
 
-    private static Subject createSubject(final String subjectId, final Integer samlAssertionDays) {
+    private static Subject createSubject(final String replyUrl, final String nameID, final Integer samlAssertionDays) {
         DateTime currentDate = new DateTime();
         if (samlAssertionDays != null) {
             currentDate = currentDate.plusDays(samlAssertionDays);
@@ -186,14 +194,13 @@ public class SamlAssertionProducer {
         // create name element
         NameIDBuilder nameIdBuilder = new NameIDBuilder();
         NameID nameId = nameIdBuilder.buildObject();
-        nameId.setValue(subjectId);
+        nameId.setValue(nameID);
         nameId.setFormat(NameIDType.EMAIL);
-//        nameId.setFormat(NameIDType.PERSISTENT);
 
         SubjectConfirmationDataBuilder dataBuilder = new SubjectConfirmationDataBuilder();
         SubjectConfirmationData subjectConfirmationData = dataBuilder.buildObject();
         subjectConfirmationData.setNotOnOrAfter(currentDate);
-        subjectConfirmationData.setRecipient(CommonConstants.ALIYUN_REPLY_URL);
+        subjectConfirmationData.setRecipient(replyUrl);
 
         SubjectConfirmationBuilder subjectConfirmationBuilder = new SubjectConfirmationBuilder();
         SubjectConfirmation subjectConfirmation = subjectConfirmationBuilder.buildObject();

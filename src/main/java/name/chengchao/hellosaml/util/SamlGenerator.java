@@ -1,6 +1,8 @@
 package name.chengchao.hellosaml.util;
 
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
+import java.util.List;
 
 import name.chengchao.hellosaml.common.CertManager;
 import name.chengchao.hellosaml.common.CommonConstants;
@@ -39,7 +41,6 @@ public class SamlGenerator {
     }
 
     public static void main(String[] args) throws Exception {
-        generateResponse();
         generateMetaXML();
     }
 
@@ -49,10 +50,9 @@ public class SamlGenerator {
      * @return
      * @throws Throwable
      */
-    public static String generateResponse() throws Exception {
-        Response responseInitial = SamlAssertionProducer.createSAMLResponse(null, null);
-//        Response responseInitial = SamlAssertionProducer.createSAMLResponse(CommonConstants.ROLE_SESSION_NAME,
-//                CommonConstants.ROLE_LIST);
+    public static String generateResponse(String identifier, String replyUrl, String nameID,
+            HashMap<String, List<String>> attributes) throws Exception {
+        Response responseInitial = SamlAssertionProducer.createSAMLResponse(identifier, replyUrl, nameID, attributes);
 
         // output Response
         ResponseMarshaller marshaller = new ResponseMarshaller();

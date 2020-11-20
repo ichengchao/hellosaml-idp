@@ -1,6 +1,9 @@
 package name.chengchao.hellosaml.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,7 +42,15 @@ public class SampleController {
             if (CommonConstants.SSO_FORM_AUTO_SUBMIT) {
                 onloadSubmit = "onload=\"document.forms[0].submit()\"";
             }
-            String samlResponse = SamlGenerator.generateResponse();
+
+            HashMap<String, List<String>> attributes = new HashMap<String, List<String>>();
+            attributes.put(CommonConstants.ATTRIBUTE_KEY_ROLE, CommonConstants.ROLE_LIST);
+            List<String> sessionNameList = new ArrayList<String>();
+            sessionNameList.add(CommonConstants.ROLE_SESSION_NAME);
+            attributes.put(CommonConstants.ATTRIBUTE_KEY_ROLE_SESSION_NAME, sessionNameList);
+
+            String samlResponse = SamlGenerator.generateResponse(CommonConstants.ALIYUN_IDENTIFIER,
+                    CommonConstants.ALIYUN_REPLY_URL, "wang@chengchao.name", attributes);
             response.setContentType("text/html;charset=UTF-8");
             response.getWriter().write("<!DOCTYPE html><html><head><meta charset=\"utf-8\" /></head><body "
                     + onloadSubmit + "><form action=\"" + CommonConstants.ALIYUN_REPLY_URL
