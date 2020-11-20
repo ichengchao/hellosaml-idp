@@ -50,7 +50,7 @@ public class SampleController {
             attributes.put(CommonConstants.ATTRIBUTE_KEY_ROLE_SESSION_NAME, sessionNameList);
 
             String samlResponse = SamlGenerator.generateResponse(CommonConstants.ALIYUN_IDENTIFIER,
-                    CommonConstants.ALIYUN_REPLY_URL, "wang@chengchao.name", attributes);
+                    CommonConstants.ALIYUN_REPLY_URL, CommonConstants.ATTRIBUTE_KEY_ROLE_SESSION_NAME, attributes);
             response.setContentType("text/html;charset=UTF-8");
             response.getWriter().write("<!DOCTYPE html><html><head><meta charset=\"utf-8\" /></head><body "
                     + onloadSubmit + "><form action=\"" + CommonConstants.ALIYUN_REPLY_URL
