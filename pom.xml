@@ -8,10 +8,10 @@
 		<relativePath />
 	</parent>
 	<groupId>name.chengchao</groupId>
-	<artifactId>hellosaml</artifactId>
+	<artifactId>hellosaml-idp</artifactId>
 	<version>1.0</version>
-	<name>hellosaml</name>
-	<description>Demo project for SAML</description>
+	<name>hellosaml-idp</name>
+	<description>Demo project for SAML IdP</description>
 
 	<properties>
 		<java.version>17</java.version>
