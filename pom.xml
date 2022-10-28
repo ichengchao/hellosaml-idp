@@ -34,6 +34,7 @@
 			<version>2.11.0</version>
 		</dependency>
 
+		<!-- opensaml -->
 		<dependency>
 			<groupId>org.opensaml</groupId>
 			<artifactId>opensaml-core</artifactId>
@@ -49,6 +50,7 @@
 			<artifactId>opensaml-saml-impl</artifactId>
 			<version>4.0.1</version>
 		</dependency>
+		<!-- opensaml -->
 
 		<dependency>
 			<groupId>org.dom4j</groupId>

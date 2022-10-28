@@ -65,6 +65,7 @@ public class SampleController {
                 String ramUsername = request.getParameter("ramUsername");
                 samlResponse = buildUserSSOSamlResponse(uid, ramUsername);
                 postURL = ALIYUN_REPLY_URL_USERSSO;
+                //postURL = "http://localhost:8088/sp.do";
             } else {
                 throw new RuntimeException("not support type:" + type);
             }
