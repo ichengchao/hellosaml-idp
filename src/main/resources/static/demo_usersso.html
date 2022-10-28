@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Demo</title>
+    <link href="https://ichengchao.oss-cn-hangzhou.aliyuncs.com/static/css/bootstrap.min.4_3_1.css" rel="stylesheet">
+    <script type="text/javascript"
+        src="https://ichengchao.oss-cn-hangzhou.aliyuncs.com/static/jslib/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#div_saml").hide();
+            $("#btn_saml").on("click", function () {
+                $.ajax({
+                    url: "../getSamlResponse?type=aliyun_usersso",
+                    data: {
+                        uid: $("input[name='uid']").val(),
+                        ramUsername: $("input[name='ramUsername']").val()
+                    },
+                    success: function (result) {
+                        $("#textarea_saml").val(result);
+                        $("#div_saml").show();
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <br>
+        <h2>Aliyun User SSO Demo</h2>
+        <hr>
+
+        <form id="myform" action="../login?type=aliyun_usersso" method="post" target="_blank">
+            <div class="form-group">
+                <label>
+                    <h6>阿里云账号ID (UID)</h6>
+                </label>
+                <input class="form-control" name="uid" placeholder="必填,示例:1764263140470000">
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <h6>RAM用户名 (@域名后缀)</h6>
+                </label>
+                <input class="form-control" name="ramUsername" placeholder="必填,示例:zhangsan@chengchao.name">
+            </div>
+
+            <br>
+
+            <button id="btn_submit" class="btn btn-success" type="submit">&nbsp;&nbsp;登录&nbsp;&nbsp;</button>
+
+            <br><br><br>
+            <div class="form-group" id="div_saml">
+                <textarea id="textarea_saml" class="form-control" style="height: 300px;"></textarea>
+            </div>
+        </form>
+
+        <hr>
+        <button id="btn_saml" class="btn btn-primary">show SAMLResponse</button>
+        <br>
+        <br>
+
+        <form action="../metaxml" target="_blank">
+            <button class="btn btn-primary" type="submit">download meta.xml</button>
+        </form>
+
+    </div>
+</body>
+
+</html>

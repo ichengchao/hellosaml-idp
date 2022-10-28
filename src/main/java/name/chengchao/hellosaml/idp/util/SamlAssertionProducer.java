@@ -1,74 +1,89 @@
-package name.chengchao.hellosaml.util;
+package name.chengchao.hellosaml.idp.util;
 
-import java.util.ArrayList;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import name.chengchao.hellosaml.common.CertManager;
-import name.chengchao.hellosaml.common.CommonConstants;
-import org.joda.time.DateTime;
-import org.opensaml.common.SAMLVersion;
-import org.opensaml.saml2.core.Assertion;
-import org.opensaml.saml2.core.Attribute;
-import org.opensaml.saml2.core.AttributeStatement;
-import org.opensaml.saml2.core.AttributeValue;
-import org.opensaml.saml2.core.Audience;
-import org.opensaml.saml2.core.AudienceRestriction;
-import org.opensaml.saml2.core.AuthnContext;
-import org.opensaml.saml2.core.AuthnContextClassRef;
-import org.opensaml.saml2.core.AuthnStatement;
-import org.opensaml.saml2.core.Conditions;
-import org.opensaml.saml2.core.Issuer;
-import org.opensaml.saml2.core.NameID;
-import org.opensaml.saml2.core.Response;
-import org.opensaml.saml2.core.Status;
-import org.opensaml.saml2.core.StatusCode;
-import org.opensaml.saml2.core.Subject;
-import org.opensaml.saml2.core.SubjectConfirmation;
-import org.opensaml.saml2.core.SubjectConfirmationData;
-import org.opensaml.saml2.core.impl.AssertionBuilder;
-import org.opensaml.saml2.core.impl.AttributeBuilder;
-import org.opensaml.saml2.core.impl.AttributeStatementBuilder;
-import org.opensaml.saml2.core.impl.AudienceBuilder;
-import org.opensaml.saml2.core.impl.AudienceRestrictionBuilder;
-import org.opensaml.saml2.core.impl.AuthnContextBuilder;
-import org.opensaml.saml2.core.impl.AuthnContextClassRefBuilder;
-import org.opensaml.saml2.core.impl.AuthnStatementBuilder;
-import org.opensaml.saml2.core.impl.ConditionsBuilder;
-import org.opensaml.saml2.core.impl.IssuerBuilder;
-import org.opensaml.saml2.core.impl.NameIDBuilder;
-import org.opensaml.saml2.core.impl.ResponseBuilder;
-import org.opensaml.saml2.core.impl.ResponseMarshaller;
-import org.opensaml.saml2.core.impl.StatusBuilder;
-import org.opensaml.saml2.core.impl.StatusCodeBuilder;
-import org.opensaml.saml2.core.impl.SubjectBuilder;
-import org.opensaml.saml2.core.impl.SubjectConfirmationBuilder;
-import org.opensaml.saml2.core.impl.SubjectConfirmationDataBuilder;
-import org.opensaml.xml.schema.XSString;
-import org.opensaml.xml.schema.impl.XSStringBuilder;
-import org.opensaml.xml.signature.Signature;
-import org.opensaml.xml.signature.SignatureConstants;
-import org.opensaml.xml.signature.Signer;
-import org.opensaml.xml.signature.impl.SignatureBuilder;
+import org.opensaml.core.xml.config.XMLObjectProviderRegistrySupport;
+import org.opensaml.core.xml.io.Marshaller;
+import org.opensaml.core.xml.schema.XSString;
+import org.opensaml.core.xml.schema.impl.XSStringBuilder;
+import org.opensaml.saml.common.SAMLVersion;
+import org.opensaml.saml.saml2.core.Assertion;
+import org.opensaml.saml.saml2.core.Attribute;
+import org.opensaml.saml.saml2.core.AttributeStatement;
+import org.opensaml.saml.saml2.core.AttributeValue;
+import org.opensaml.saml.saml2.core.Audience;
+import org.opensaml.saml.saml2.core.AudienceRestriction;
+import org.opensaml.saml.saml2.core.AuthnContext;
+import org.opensaml.saml.saml2.core.AuthnContextClassRef;
+import org.opensaml.saml.saml2.core.AuthnStatement;
+import org.opensaml.saml.saml2.core.Conditions;
+import org.opensaml.saml.saml2.core.Issuer;
+import org.opensaml.saml.saml2.core.NameID;
+import org.opensaml.saml.saml2.core.NameIDType;
+import org.opensaml.saml.saml2.core.Response;
+import org.opensaml.saml.saml2.core.Status;
+import org.opensaml.saml.saml2.core.StatusCode;
+import org.opensaml.saml.saml2.core.Subject;
+import org.opensaml.saml.saml2.core.SubjectConfirmation;
+import org.opensaml.saml.saml2.core.SubjectConfirmationData;
+import org.opensaml.saml.saml2.core.impl.AssertionBuilder;
+import org.opensaml.saml.saml2.core.impl.AttributeBuilder;
+import org.opensaml.saml.saml2.core.impl.AttributeStatementBuilder;
+import org.opensaml.saml.saml2.core.impl.AudienceBuilder;
+import org.opensaml.saml.saml2.core.impl.AudienceRestrictionBuilder;
+import org.opensaml.saml.saml2.core.impl.AuthnContextBuilder;
+import org.opensaml.saml.saml2.core.impl.AuthnContextClassRefBuilder;
+import org.opensaml.saml.saml2.core.impl.AuthnStatementBuilder;
+import org.opensaml.saml.saml2.core.impl.ConditionsBuilder;
+import org.opensaml.saml.saml2.core.impl.IssuerBuilder;
+import org.opensaml.saml.saml2.core.impl.NameIDBuilder;
+import org.opensaml.saml.saml2.core.impl.ResponseBuilder;
+import org.opensaml.saml.saml2.core.impl.StatusBuilder;
+import org.opensaml.saml.saml2.core.impl.StatusCodeBuilder;
+import org.opensaml.saml.saml2.core.impl.SubjectBuilder;
+import org.opensaml.saml.saml2.core.impl.SubjectConfirmationBuilder;
+import org.opensaml.saml.saml2.core.impl.SubjectConfirmationDataBuilder;
+import org.opensaml.xmlsec.signature.Signature;
+import org.opensaml.xmlsec.signature.impl.SignatureBuilder;
+import org.opensaml.xmlsec.signature.support.SignatureConstants;
+import org.opensaml.xmlsec.signature.support.Signer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
+
+import name.chengchao.hellosaml.idp.common.CertManager;
+import name.chengchao.hellosaml.idp.common.CommonConstants;
 
 public class SamlAssertionProducer {
 
-    public static Response createSAMLResponse(String roleSessionName, List<String> roleList) throws Exception {
+    private static Logger logger = LoggerFactory.getLogger(SamlAssertionProducer.class);
 
-        HashMap<String, List<String>> attributes = new HashMap<String, List<String>>();
-        attributes.put(CommonConstants.ATTRIBUTE_KEY_ROLE, roleList);
-        List<String> sessionNameList = new ArrayList<String>();
-        sessionNameList.add(roleSessionName);
-        attributes.put(CommonConstants.ATTRIBUTE_KEY_ROLE_SESSION_NAME, sessionNameList);
+    public static Response createSAMLResponse(String identifier, String replyUrl, String nameID,
+        HashMap<String, List<String>> attributes) throws Exception {
+
+        Assert.hasText(identifier, "identifier can not be blank!");
+        Assert.hasText(replyUrl, "replyUrl can not be blank!");
+        Assert.hasText(nameID, "nameID can not be blank!");
+        // Assert.notEmpty(attributes, "attributes can not be empty!");
+
+        logger.info("**********************************SAML INFO**********************************");
+        logger.info("identifier: " + identifier);
+        logger.info("replyUrl: " + replyUrl);
+        logger.info("nameID: " + nameID);
+        logger.info("attributes: " + attributes);
+        logger.info("*****************************************************************************");
 
         // ****************默认参数***************
-        String subjectId = "subject";
-        DateTime authenticationTime = new DateTime();
+        Instant authenticationTime = Instant.now();
         String issuer = CommonConstants.IDP_ENTITY_ID;
-        Integer samlAssertionDays = 5;
+        Integer samlAssertionDays = 2;
         // ****************默认参数***************
+
         Signature signature = createSignature();
         Status status = createStatus();
         Issuer responseIssuer = null;
@@ -81,26 +96,33 @@ public class SamlAssertionProducer {
             assertionIssuer = createIssuer(issuer);
         }
 
-        if (subjectId != null) {
-            subject = createSubject(subjectId, samlAssertionDays);
+        if (attributes != null) {
+            attributeStatement = createAttributeStatement(attributes);
         }
 
-        if (attributes != null && attributes.size() != 0) {
-            attributeStatement = createAttributeStatement(attributes);
+        if (nameID != null) {
+            subject = createSubject(replyUrl, nameID, samlAssertionDays);
         }
 
         AuthnStatement authnStatement = createAuthnStatement(authenticationTime);
 
-        Assertion assertion = createAssertion(new DateTime(), subject, assertionIssuer, authnStatement,
-                attributeStatement, samlAssertionDays);
+        Assertion assertion = createAssertion(authenticationTime, subject, assertionIssuer, authnStatement,
+            attributeStatement, samlAssertionDays, identifier);
 
-        Response response = createResponse(new DateTime(), responseIssuer, status, assertion);
+        Response response = createResponse(authenticationTime, responseIssuer, status, assertion);
+
+        // aliyun cloud sso 开启新的校验
+        response.setDestination(replyUrl);
+        // id不能以数字开头,所以统一加"_"
+        response.setID("_" + response.getID());
+        response.getAssertions().get(0).setID("_" + response.getAssertions().get(0).getID());
 
         // aliyun 两种都可以,aws需要把signature放在assertion里
         // response.setSignature(signature);
         response.getAssertions().get(0).setSignature(signature);
 
-        ResponseMarshaller marshaller = new ResponseMarshaller();
+        Marshaller marshaller = XMLObjectProviderRegistrySupport.getMarshallerFactory()
+            .getMarshaller(response.getElementQName());
         marshaller.marshall(response);
 
         if (signature != null) {
@@ -109,7 +131,7 @@ public class SamlAssertionProducer {
         return response;
     }
 
-    private static Conditions createConditions(final DateTime notOnOrAfter, final String audienceUri) {
+    private static Conditions createConditions(Instant notOnOrAfter, final String audienceUri) {
         ConditionsBuilder conditionsBuilder = new ConditionsBuilder();
         final Conditions conditions = conditionsBuilder.buildObject();
         conditions.setNotOnOrAfter(notOnOrAfter);
@@ -118,14 +140,13 @@ public class SamlAssertionProducer {
         final AudienceRestriction audienceRestriction = audienceRestrictionBuilder.buildObject();
         AudienceBuilder audienceBuilder = new AudienceBuilder();
         final Audience audience = audienceBuilder.buildObject();
-        audience.setAudienceURI(audienceUri);
+        audience.setURI(audienceUri);
         audienceRestriction.getAudiences().add(audience);
         conditions.getAudienceRestrictions().add(audienceRestriction);
         return conditions;
     }
 
-    private static Response createResponse(final DateTime issueDate, Issuer issuer, Status status,
-            Assertion assertion) {
+    private static Response createResponse(Instant issueDate, Issuer issuer, Status status, Assertion assertion) {
 
         ResponseBuilder responseBuilder = new ResponseBuilder();
         Response response = responseBuilder.buildObject();
@@ -138,8 +159,9 @@ public class SamlAssertionProducer {
         return response;
     }
 
-    private static Assertion createAssertion(final DateTime issueDate, Subject subject, Issuer issuer,
-            AuthnStatement authnStatement, AttributeStatement attributeStatement, final Integer samlAssertionDays) {
+    private static Assertion createAssertion(Instant issueDate, Subject subject, Issuer issuer,
+        AuthnStatement authnStatement, AttributeStatement attributeStatement, final Integer samlAssertionDays,
+        final String identifier) {
         AssertionBuilder assertionBuilder = new AssertionBuilder();
         Assertion assertion = assertionBuilder.buildObject();
         assertion.setID(UUID.randomUUID().toString());
@@ -147,18 +169,20 @@ public class SamlAssertionProducer {
         assertion.setSubject(subject);
         assertion.setIssuer(issuer);
 
-        DateTime currentDate = new DateTime();
+        Instant currentDate = Instant.now();
         if (samlAssertionDays != null) {
-            currentDate = currentDate.plusDays(samlAssertionDays);
+            currentDate = currentDate.plus(samlAssertionDays, ChronoUnit.DAYS);
         }
-        Conditions conditions = createConditions(currentDate, CommonConstants.ALIYUN_IDENTIFIER);
+        Conditions conditions = createConditions(currentDate, identifier);
         assertion.setConditions(conditions);
 
-        if (authnStatement != null)
+        if (authnStatement != null) {
             assertion.getAuthnStatements().add(authnStatement);
+        }
 
-        if (attributeStatement != null)
+        if (attributeStatement != null) {
             assertion.getAttributeStatements().add(attributeStatement);
+        }
 
         return assertion;
     }
@@ -171,22 +195,22 @@ public class SamlAssertionProducer {
         return issuer;
     }
 
-    private static Subject createSubject(final String subjectId, final Integer samlAssertionDays) {
-        DateTime currentDate = new DateTime();
+    private static Subject createSubject(final String replyUrl, final String nameID, final Integer samlAssertionDays) {
+        Instant currentDate = Instant.now();
         if (samlAssertionDays != null) {
-            currentDate = currentDate.plusDays(samlAssertionDays);
+            currentDate = currentDate.plus(samlAssertionDays, ChronoUnit.DAYS);
         }
 
         // create name element
         NameIDBuilder nameIdBuilder = new NameIDBuilder();
         NameID nameId = nameIdBuilder.buildObject();
-        nameId.setValue(subjectId);
-        nameId.setFormat("urn:oasis:names:tc:SAML:2.0:nameid-format:persistent");
+        nameId.setValue(nameID);
+        nameId.setFormat(NameIDType.EMAIL);
 
         SubjectConfirmationDataBuilder dataBuilder = new SubjectConfirmationDataBuilder();
         SubjectConfirmationData subjectConfirmationData = dataBuilder.buildObject();
         subjectConfirmationData.setNotOnOrAfter(currentDate);
-        subjectConfirmationData.setRecipient(CommonConstants.ALIYUN_REPLY_URL);
+        subjectConfirmationData.setRecipient(replyUrl);
 
         SubjectConfirmationBuilder subjectConfirmationBuilder = new SubjectConfirmationBuilder();
         SubjectConfirmation subjectConfirmation = subjectConfirmationBuilder.buildObject();
@@ -202,11 +226,12 @@ public class SamlAssertionProducer {
         return subject;
     }
 
-    private static AuthnStatement createAuthnStatement(final DateTime issueDate) {
+    private static AuthnStatement createAuthnStatement(Instant issueDate) {
         // create authcontextclassref object
         AuthnContextClassRefBuilder classRefBuilder = new AuthnContextClassRefBuilder();
         AuthnContextClassRef classRef = classRefBuilder.buildObject();
-        classRef.setAuthnContextClassRef("urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport");
+        // classRef.setAuthnContextClassRef("urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport");
+        classRef.setURI("urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport");
 
         // create authcontext object
         AuthnContextBuilder authContextBuilder = new AuthnContextBuilder();
@@ -236,7 +261,7 @@ public class SamlAssertionProducer {
                 for (String value : entry.getValue()) {
                     XSStringBuilder stringBuilder = new XSStringBuilder();
                     XSString attributeValue = stringBuilder.buildObject(AttributeValue.DEFAULT_ELEMENT_NAME,
-                            XSString.TYPE_NAME);
+                        XSString.TYPE_NAME);
                     attributeValue.setValue(value);
                     attribute.getAttributeValues().add(attributeValue);
                 }
@@ -251,7 +276,7 @@ public class SamlAssertionProducer {
     private static Status createStatus() {
         StatusCodeBuilder statusCodeBuilder = new StatusCodeBuilder();
         StatusCode statusCode = statusCodeBuilder.buildObject();
-        statusCode.setValue(StatusCode.SUCCESS_URI);
+        statusCode.setValue(StatusCode.SUCCESS);
         StatusBuilder statusBuilder = new StatusBuilder();
         Status status = statusBuilder.buildObject();
         status.setStatusCode(statusCode);

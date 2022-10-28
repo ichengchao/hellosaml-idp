@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Demo</title>
+    <link href="https://ichengchao.oss-cn-hangzhou.aliyuncs.com/static/css/bootstrap.min.4_3_1.css" rel="stylesheet">
+    <script type="text/javascript"
+        src="https://ichengchao.oss-cn-hangzhou.aliyuncs.com/static/jslib/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#div_saml").hide();
+            $("#btn_saml").on("click", function () {
+                $.ajax({
+                    url: "../getSamlResponse?type=aliyun_rolesso",
+                    data: {
+                        uid: $("input[name='uid']").val(),
+                        sessionName: $("input[name='sessionName']").val(),
+                        roleName: $("input[name='roleName']").val(),
+                        provider: $("input[name='provider']").val()
+                    },
+                    success: function (result) {
+                        $("#textarea_saml").val(result);
+                        $("#div_saml").show();
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <br>
+        <h2>Aliyun Role SSO Demo</h2>
+        <hr>
+
+        <form id="myform" action="../login?type=aliyun_rolesso" method="post" target="_blank">
+            <div class="form-group">
+                <label>
+                    <h6>阿里云账号ID (UID)</h6>
+                </label>
+                <input class="form-control" name="uid" placeholder="必填,示例:1764263140470000">
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <h6>SessionName (用户标识)</h6>
+                </label>
+                <input class="form-control" name="sessionName"
+                    placeholder="必填,一般是用户的唯一标识,比如邮箱地址或者工号,示例:zhangsan@demo.com">
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <h6>角色名称 (阿里云的角色)</h6>
+                </label>
+                <input class="form-control" name="roleName" placeholder="必填,需要在阿里云侧先配置好,示例:admin">
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <h6>身份提供商 (IdP)</h6>
+                </label>
+                <input class="form-control" name="provider" placeholder="必填,需要在阿里云侧先配置好示例:superAD">
+            </div>
+
+            <br>
+
+            <button id="btn_submit" class="btn btn-success" type="submit">&nbsp;&nbsp;登录&nbsp;&nbsp;</button>
+
+            <br><br><br>
+            <div class="form-group" id="div_saml">
+                <textarea id="textarea_saml" class="form-control" style="height: 300px;"></textarea>
+            </div>
+        </form>
+
+        <hr>
+        <button id="btn_saml" class="btn btn-primary">show SAMLResponse</button>
+        <br>
+        <br>
+
+        <form action="../metaxml" target="_blank">
+            <button class="btn btn-primary" type="submit">download meta.xml</button>
+        </form>
+
+    </div>
+</body>
+
+</html>
